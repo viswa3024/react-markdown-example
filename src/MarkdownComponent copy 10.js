@@ -4,7 +4,6 @@ import remarkGfm from 'remark-gfm';
 //import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'; 
-import classes from './markdown-styles.module.css';
 
 const MarkdownComponent = () => {
   const markdownText = `
@@ -101,11 +100,12 @@ This is a simple example of using \`react-markdown\` with \`remark-gfm\`.
 
 
 
-## Bash Syntax Highlighting Example
 
-This is some Bash code:
+    ## Bash Syntax Highlighting Example
 
-\`\`\`bash
+    This is some Bash code:
+
+    \`\`\`bash
     #!/bin/bash
 
     echo "Hello, World!"
@@ -114,7 +114,7 @@ This is some Bash code:
     do
       echo "Count: $i"
     done
-  \`\`\`
+    \`\`\`
 
 
 ## Links and Images
@@ -338,62 +338,30 @@ console.log('It works!')
 
   `;
 
-  const TableComponent = ({ children }) => {
-    return <table className={classes.customTable}>{children}</table>;
-  };
-
-
-  const customRenderers = {
-    // img(image) {
-    //   return (
-    //     <Image
-    //       src={`/images/posts/${post.slug}/${image.src}`}
-    //       alt={image.alt}
-    //       width={600}
-    //       height={300}
-    //     />
-    //   );
-    // },
-    p(paragraph) {
-      const { node } = paragraph;
-
-      if (node.children[0].tagName === 'img') {
-        const image = node.children[0];
-        return (
-          <div className={classes.image}>
-            <img
-              //src={`${image.properties.src}`}
-              src={image.properties.src}
-              alt={image.alt}
-              width={800}
-              height={400}
-            />
-          </div>
-        );
-      }
-
-      return <p>{paragraph.children}</p>;
-    },
-    code({ node, inline, className, children, ...props }) {
-      const match = /language-(\w+)/.exec(className || '');
-      return !inline && match ? (
-        <SyntaxHighlighter style={atomDark} PreTag="div"  language={match[1]} {...props}>
-          {String(children).replace(/\n$/, '')}
-        </SyntaxHighlighter>
-      ) : (
-        <code className={className} {...props}>
-          {children}
-        </code>
-      );
-    },
-    table: TableComponent
-
-  };
-
   return (
     <div>
-     
-      <ReactMarkdown components={customRenderers} remarkPlugins={[remarkGfm]} >
+      {/* <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownText}</ReactMarkdown> */}
+      <ReactMarkdown 
+      skipHtml={false}
+      //remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm]}
+      //rehypePlugins={[rehypeRaw]}
+      components={{
+        code({ node, inline, className, children, ...props }) {
+          const match = /language-(\w+)/.exec(className || '');
+
+          return !inline && match ? (
+            <SyntaxHighlighter style={atomDark} PreTag="div"  language={match[1]} {...props}>
+              {String(children).replace(/\n$/, '')}
+            </SyntaxHighlighter>
+          ) : (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          );
+        },
+      }}
+    >
       {markdownText}
     </ReactMarkdown>
     </div>
