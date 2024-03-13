@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <div className='app-div'>
-      <MarkdownComponent  />
+      <ToggleSwitch checked={isChecked} onChange={handleToggle} />
     </div>
   );
 };
