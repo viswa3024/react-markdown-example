@@ -176,32 +176,6 @@ This is a simple example of using \`react-markdown\` with \`remark-gfm\`.
     });
   };
 
-
-  // const generatePDF = () => {
-  //   if (!contentRef.current) return;
-
-  //   html2canvas(contentRef.current).then(canvas => {
-  //     const imgData = canvas.toDataURL('image/png');
-  //     const pdf = new jsPDF('p', 'mm', 'a4');
-  //     const imgWidth = 210;
-  //     const imgHeight = canvas.height * imgWidth / canvas.width;
-  //     let heightLeft = imgHeight;
-  //     let position = 0;
-
-  //     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-  //     heightLeft -= 297;
-
-  //     while (heightLeft >= 0) {
-  //       position = heightLeft - imgHeight;
-  //       pdf.addPage();
-  //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-  //       heightLeft -= 297;
-  //     }
-
-  //     pdf.save('generated.pdf');
-  //   });
-  // };
-
   const TableComponent = ({ children }) => {
     return <table className={classes.customTable}>{children}</table>;
   };
