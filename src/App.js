@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
-import MarkdownComponent from './MarkdownComponent';
-import ToggleSwitch from './ToggleSwitch';
-import './App.css'
+// pages/pdf.js
 
-const App = () => {
-  const [isChecked, setChecked] = useState(false);
+import React from 'react';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import PDFDocument from './PDFDocument';
 
-  const handleToggle = (newState) => {
-    console.log('newState: ', newState)
-    setChecked(newState);
-  };
+const PDFPage = () => (<>
+  <PDFViewer width="100%" height="600px">
+    <PDFDocument />
+  </PDFViewer>
+  <PDFDownloadLink document={<PDFDocument />} fileName="document.pdf">
+      {({ blob, url, loading, error }) =>
+        loading ? 'Loading document...' : 'Download now!'
+      }
+    </PDFDownloadLink>
+  
+</>);
 
-  return (
-    <div className='app-div'>
-      <MarkdownComponent  />
-    </div>
-  );
-};
-
-export default App;
+export default PDFPage;
