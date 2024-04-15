@@ -151,31 +151,155 @@ This is a simple example of using \`react-markdown\` with \`remark-gfm\`.
 
   `;
 
-  const generatePDF = () => {
+  const pageHeight = 297; // A4 page height in mm
+  const pageWidth = 210; // A4 page width in mm
+
+  // const generatePDF = () => {
+  //   if (!contentRef.current) return;
+
+  //   html2canvas(contentRef.current).then(canvas => {
+  //     const imgData = canvas.toDataURL('image/png');
+  //     const pdf = new jsPDF('p', 'mm', 'a4');
+  //     const imgWidth = 210;
+  //     const imgHeight = canvas.height * imgWidth / canvas.width;
+  //     let heightLeft = imgHeight;
+  //     let position = 0;
+
+  //     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  //     heightLeft -= 297;
+
+  //     while (heightLeft >= 0) {
+  //       position = heightLeft - imgHeight;
+  //       pdf.addPage();
+  //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  //       heightLeft -= 297;
+  //     }
+
+  //     pdf.save('generated.pdf');
+  //   });
+  // };
+
+  // const generatePDF = async () => {
+  //   if (!contentRef.current) return;
+
+  //   const contentHeight = contentRef.current.offsetHeight;
+  //   const pdf = new jsPDF('p', 'mm', 'a4');
+
+  //   const dataUrl = await html2canvas(contentRef.current, {
+  //     scrollY: 0,
+  //     useCORS: true, // Enable CORS support
+  //   }).then(canvas => canvas.toDataURL('image/png'));
+
+  //   pdf.addImage(dataUrl, 'PNG', 0, 0);
+
+  //   pdf.save('generated.pdf');
+  // };
+
+  // const generatePDF = async () => {
+  //   if (!contentRef.current) return;
+
+  //   const contentHeight = contentRef.current.offsetHeight;
+  //   const numPages = Math.ceil(contentHeight / window.innerHeight);
+
+  //   const pdf = new jsPDF('p', 'mm', 'a4');
+
+  //   for (let i = 0; i < numPages; i++) {
+  //     const yOffset = window.innerHeight * i;
+  //     const canvas = await html2canvas(contentRef.current, {
+  //       scrollY: yOffset,
+  //       windowHeight: window.innerHeight,
+  //     });
+  //     const imgData = canvas.toDataURL('image/png');
+
+  //     if (i > 0) {
+  //       pdf.addPage();
+  //     }
+
+  //     pdf.addImage(imgData, 'PNG', 0, 0);
+  //   }
+
+  //   pdf.save('generated.pdf');
+  // };
+
+  // const generatePDF = async () => {
+  //   if (!contentRef.current) return;
+
+  //   const contentHeight = contentRef.current.offsetHeight;
+  //   const viewportHeight = window.innerHeight;
+  //   const numPages = Math.ceil(contentHeight / viewportHeight);
+
+  //   const pdf = new jsPDF('p', 'mm', 'a4');
+
+  //   for (let i = 0; i < numPages; i++) {
+  //     const yOffset = viewportHeight * i;
+  //     const canvas = await html2canvas(contentRef.current, {
+  //       scrollY: yOffset,
+  //       windowHeight: viewportHeight,
+  //     });
+
+  //     if (i > 0) {
+  //       pdf.addPage();
+  //     }
+
+  //     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0);
+  //   }
+
+  //   pdf.save('generated.pdf');
+  // };
+
+  const generatePDF = async () => {
     if (!contentRef.current) return;
 
-    html2canvas(contentRef.current).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const imgHeight = canvas.height * imgWidth / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
+    const contentHeight = contentRef.current.offsetHeight;
+    const viewportHeight = window.innerHeight;
+    const numPages = Math.ceil(contentHeight / viewportHeight);
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= 297;
+    const pdf = new jsPDF('p', 'mm', 'a4');
 
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
+    for (let i = 0; i < numPages; i++) {
+      const yOffset = viewportHeight * i;
+      const canvas = await html2canvas(contentRef.current, {
+        scrollY: yOffset,
+        windowHeight: viewportHeight,
+        x: 0,
+        y: yOffset > contentHeight ? contentHeight - viewportHeight : yOffset,
+        width: window.innerWidth,
+        height: Math.min(viewportHeight, contentHeight - yOffset),
+      });
+
+      if (i > 0) {
         pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= 297;
       }
 
-      pdf.save('generated.pdf');
-    });
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0);
+    }
+
+    pdf.save('generated.pdf');
   };
 
+  // const generatePDF = async () => {
+  //   if (!contentRef.current) return;
+
+  //   const contentHeight = contentRef.current.offsetHeight;
+  //   const numPages = Math.ceil(contentHeight / pageHeight);
+
+  //   const pdf = new jsPDF('p', 'mm', 'a4');
+
+  //   for (let i = 0; i < numPages; i++) {
+  //     const yPosition = -pageHeight * i;
+  //     const dataUrl = await html2canvas(contentRef.current, {
+  //       scrollY: -yPosition,
+  //     }).then(canvas => canvas.toDataURL('image/png'));
+
+  //     if (i > 0) {
+  //       pdf.addPage();
+  //     }
+
+  //     pdf.addImage(dataUrl, 'PNG', 0, 0, pageWidth, pageHeight);
+  //   }
+
+  //   pdf.save('generated.pdf');
+  // };
 
   // const generatePDF = () => {
   //   if (!contentRef.current) return;
